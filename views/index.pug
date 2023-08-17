@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" />
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")
+    link(rel="stylesheet", href="style.css")
+</head>
+<body class="index_body container">
+    <div style="height: 92%;">
+        <h3 style="margin: 0;padding: 10px;background: #1186ed;">#{name}</h3>
+        <div class="show_msg_body" >
+            <ul id="showMsg" style="margin:0;padding: 0 10px;">
+            </ul>
+        </div>
+    </div>
+    <div>
+        <form method="get" id="formData" >
+            <div class="form-group" style="display: flex;justify-content: space-between;gap: 3px;padding: 3px;">
+                <input type="text" name="msg" id="msg" style="display: inline-block;" placeholder="Send a message" class="form-control">
+                <button class="btn btn-primary fas fa-paper-plane" type="submit"></button>
+            </div>
+        </form>
+    </div>
+</body>
+<script src="/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.min.js" ></script>
+script.
+    const  socket =io("http://localhost:5000");
+    socket.emit("adduser",`#{name}`);
+
+    let messages=[];
+    
+    socket.on('msgValueOn',(data)=>{
+        messages.push(data);
+        var content='';
+        $('#showMsg').innerHTML='';
+        for(let i=0;i<messages.length;i++){
+            content += `<li class="li"><span><p class="mb-1"><b>${messages[i]['name']}</b></p><p class="mb-0">${messages[i]['data']['message']}</span></p></li>`;
+        }
+        $('#showMsg').html(content);
+    })  
+    $('#formData').submit(function(event) {
+    event.preventDefault(); // Prevent default form submission behavior
+
+        var msgValue=$('#msg').val();
+        socket.emit("msgValue",{
+            message:msgValue
+        })
+        $('#msg').val('');
+    })
+</html>

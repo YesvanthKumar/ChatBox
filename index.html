@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" />
+</head>
+<body>
+    <h1>Chat Box</h1>
+    <ul id="showMsg">
+
+    </ul>
+    <form method="get" id="formData">
+        <div class="form-control">
+            <input type="text" name="msg" id="msg">
+            <input type="submit" value="Send">
+        </div>
+
+    </form>    
+</body>
+<script src="/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.min.js" ></script>
+<script>
+    var socket =io();
+    let messages=[];
+    
+    socket.on('msgValueOn',(data)=>{
+        messages.push(data);
+        var content='';
+        $('#showMsg').innerHTML='';
+        for(let i=0;i<messages.length;i++){ 
+            content += `<li>${messages[i]['message']}</li>`;
+        }
+        $('#showMsg').html(content);
+    })  
+    $('#formData').submit(function(event) {
+    var socket =io();
+    event.preventDefault(); // Prevent default form submission behavior
+
+        var msgValue=$('#msg').val();
+        socket.emit("msgValue",{
+            message:msgValue
+        })
+        $('#msg').val('');
+    })
+</script>
+</html>
